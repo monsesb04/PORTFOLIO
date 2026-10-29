@@ -794,4 +794,31 @@
                     if (dist < 120) {
                         ctx.beginPath();
                         ctx.moveTo(p.x, p.y);
-                        ctx.l
+                        ctx.lineTo(q.x, q.y);
+                        ctx.strokeStyle = `rgba(255,255,255,${0.15 * (1 - dist / 120)})`;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+                }
+
+                if (mouse.x !== null) {
+                    const d = Math.hypot(p.x - mouse.x, p.y - mouse.y);
+                    if (d < 160) {
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(mouse.x, mouse.y);
+                        ctx.strokeStyle = `rgba(150,150,255,${0.3 * (1 - d / 160)})`;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        resizeCanvas();
+        animate();
+    </script>
+
+</body>
+</html>
