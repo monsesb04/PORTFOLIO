@@ -19,47 +19,56 @@
         color: white;
         font-family: Arial, sans-serif;
       }
-
-      /* BACKGROUND */
-      body {
-        background-image:
-          linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-        background-size: 50px 50px;
-      }
+      /* BACKGROUND  */
       body::before {
         content: "";
         position: fixed;
         top: -200px;
         left: 50%;
-        transform: translateX(-50%);
         width: 800px;
         max-width: 100%;
         height: 500px;
-        background: radial-gradient(ellipse at center, rgba(120, 120, 255, 0.15), transparent 70%);
+        background: radial-gradient(ellipse at center, rgba(120, 120, 255, 0.18), transparent 70%);
         pointer-events: none;
         z-index: -1;
+        transform: translateX(-50%);
+        animation: glow 8s ease-in-out infinite alternate;
       }
+
+      @keyframes glow {
+        from { transform: translateX(-70%) translateY(0) scale(1);   opacity: 0.6; }
+        to   { transform: translateX(-30%) translateY(80px) scale(1.2); opacity: 1; }
+      }
+      
+      /* grid + tuldok na dahan-dahang gumagalaw */
       body::after {
         content: "";
         position: fixed;
-        inset: 0;
-        background-image:
-          linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-        background-size: 50px 50px;
-        pointer-events: none;
-        z-index: -1;
-      }
-      #bg {
-        position: fixed;
-        inset: 0;
+        top: -50px;
+        left: 0;
         width: 100%;
-        height: 100%;
-        z-index: -1;
+        height: calc(100% + 50px);
+        background-image:
+          linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px),
+          radial-gradient(circle, rgba(255,255,255,0.5) 1px, transparent 1.5px),
+          radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1.5px);
+        background-size: 50px 50px, 50px 50px, 100px 100px, 150px 150px;
         pointer-events: none;
+        z-index: -1;
+        animation: gridMove 6s linear infinite;
+      }
+      @keyframes gridMove {
+        from { transform: translateY(0); }
+        to   { transform: translateY(50px); }
       }
 
+    /* para sa mga naka-reduce motion sa settings */
+      @media (prefers-reduced-motion: reduce) {
+        body::before, body::after {
+          animation: none;
+        }
+      }
       /* NAVBAR */
       .navbar {
         position: sticky;
@@ -148,18 +157,63 @@
       }
 
       /* TYPING EFFECT */
-      #typing {
-        color: white;
+      .typing-box {
+        position: relative;
+        display: inline-block;
+        width: 15ch;     
+        height: 1.8em;
+        vertical-align: bottom;
+}
+
+      .word {
+        position: absolute;
+        top: 0;
+        left: 0;
+        overflow: hidden;
+        white-space: nowrap;
         font-family: monospace;
-      }
-      .cursor {
         color: white;
-        font-family: monospace;
-        animation: blink 1s infinite;
+        width: 0;
+        opacity: 0;
+        border-right: 2px solid white;
+        animation: 9s infinite;
+}
+
+      .w1 { animation-name: type1; }
+      .w2 { animation-name: type2; }
+      .w3 { animation-name: type3; }
+
+      /* "web developer" = 13 letters */
+      @keyframes type1 {
+        0%     { width: 0;    opacity: 1; animation-timing-function: steps(13); }
+        12%    { width: 13ch; }
+        28%    { width: 13ch; animation-timing-function: steps(13); }
+        33%    { width: 0;    opacity: 1; }
+        33.1%  { opacity: 0; }
+        100%   { width: 0;    opacity: 0; }
       }
-      @keyframes blink {
-        0%, 50% { opacity: 1; }
-        51%, 100% { opacity: 0; }
+      /* "Java programmer" = 15 letters */
+      @keyframes type2 {
+        0%     { width: 0; opacity: 0; }
+        33%    { width: 0; opacity: 0; }
+        33.1%  { width: 0; opacity: 1; animation-timing-function: steps(15); }
+        45%    { width: 15ch; }
+        61%    { width: 15ch; animation-timing-function: steps(15); }
+        66%    { width: 0;    opacity: 1; }
+        66.1%  { opacity: 0; }
+        100%   { width: 0;    opacity: 0; }
+      }
+
+/* "BSIS student" = 12 letter */
+      @keyframes type3 {
+        0%     { width: 0; opacity: 0; }
+        66%    { width: 0; opacity: 0; }
+        66.1%  { width: 0; opacity: 1; animation-timing-function: steps(12); }
+        78%    { width: 12ch; }
+        94%    { width: 12ch; animation-timing-function: steps(12); }
+        99%    { width: 0;    opacity: 1; }
+        99.1%  { opacity: 0; }
+        100%   { width: 0;    opacity: 0; }
       }
 
       .social-links {
@@ -552,8 +606,6 @@
 
 <body>
 
-    <canvas id="bg"></canvas>
-
     <nav class="navbar">
     <a href="#top" class="logo">jbm_</a>
 
@@ -570,10 +622,13 @@
 
         <div class="intro">
             <h1>Jhon Benedick Monses</h1>
-            <p>
-                I'm an aspiring <span id="typing"></span><span class="cursor">|</span>.
-                I enjoy learning programming and
-                creating websites.
+            <p> I'm an aspiring
+            <span class="typing-box">
+              <span class="word w1">web developer</span>
+              <span class="word w2">Java programmer</span>
+              <span class="word w3">BSIS student</span>
+            </span>
+    I enjoy learning programming and creating websites.
             </p>
 
             <div class="social-links" id="links">
@@ -708,127 +763,6 @@
         <p>© 2026 Jhon Benedick Monses</p>
         <p>Built with HTML, CSS &amp; JavaScript</p>
     </footer>
-
-    <script>
-        // TYPING EFFECT
-        const words = ["web developer", "Java programmer", "BSIS student"];
-        const typingEl = document.getElementById("typing");
-
-        let wordIndex = 0;
-        let charIndex = 0;
-        let deleting = false;
-
-        function type() {
-            const current = words[wordIndex];
-
-            if (!deleting) {
-                charIndex++;
-                typingEl.textContent = current.slice(0, charIndex);
-
-                if (charIndex === current.length) {
-                    deleting = true;
-                    setTimeout(type, 1500); // pause bago mag-delete
-                    return;
-                }
-            } else {
-                charIndex--;
-                typingEl.textContent = current.slice(0, charIndex);
-
-                if (charIndex === 0) {
-                    deleting = false;
-                    wordIndex = (wordIndex + 1) % words.length;
-                }
-            }
-
-            setTimeout(type, deleting ? 50 : 100);
-        }
-
-        type();
-
-        // ANIMATED BACKGROUND
-        const canvas = document.getElementById("bg");
-        const ctx = canvas.getContext("2d");
-
-        let particles = [];
-        const mouse = { x: null, y: null };
-        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-        function resizeCanvas() {
-            const dpr = window.devicePixelRatio || 1;
-            canvas.width = window.innerWidth * dpr;
-            canvas.height = window.innerHeight * dpr;
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-            
-            const count = window.innerWidth < 600 ? 35 : 80;
-            particles = Array.from({ length: count }, () => ({
-                x: Math.random() * window.innerWidth,
-                y: Math.random() * window.innerHeight,
-                vx: (Math.random() - 0.5) * 0.4,
-                vy: (Math.random() - 0.5) * 0.4,
-                r: Math.random() * 1.5 + 0.5
-            }));
-        }
-
-        window.addEventListener("resize", resizeCanvas);
-        window.addEventListener("mousemove", e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-        window.addEventListener("touchmove", e => {
-            mouse.x = e.touches[0].clientX;
-            mouse.y = e.touches[0].clientY;
-        }, { passive: true });
-        window.addEventListener("mouseleave", () => { mouse.x = mouse.y = null; });
-
-        function animate() {
-            ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-
-            for (let i = 0; i < particles.length; i++) {
-                const p = particles[i];
-
-                if (!reduceMotion) {
-                    p.x += p.vx;
-                    p.y += p.vy;
-                }
-                if (p.x < 0 || p.x > window.innerWidth) p.vx *= -1;
-                if (p.y < 0 || p.y > window.innerHeight) p.vy *= -1;
-
-                // tuldok
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                ctx.fillStyle = "rgba(255,255,255,0.6)";
-                ctx.fill();
-
-                // lines
-          for (let j = i + 1; j < particles.length; j++) {
-                    const q = particles[j];
-                    const dist = Math.hypot(p.x - q.x, p.y - q.y);
-                    if (dist < 120) {
-                        ctx.beginPath();
-                        ctx.moveTo(p.x, p.y);
-                        ctx.lineTo(q.x, q.y);
-                        ctx.strokeStyle = `rgba(255,255,255,${0.15 * (1 - dist / 120)})`;
-                        ctx.lineWidth = 1;
-                        ctx.stroke();
-                    }
-                }
-
-                if (mouse.x !== null) {
-                    const d = Math.hypot(p.x - mouse.x, p.y - mouse.y);
-                    if (d < 160) {
-                        ctx.beginPath();
-                        ctx.moveTo(p.x, p.y);
-                        ctx.lineTo(mouse.x, mouse.y);
-                        ctx.strokeStyle = `rgba(150,150,255,${0.3 * (1 - d / 160)})`;
-                        ctx.stroke();
-                    }
-                }
-            }
-
-            requestAnimationFrame(animate);
-        }
-
-        resizeCanvas();
-        animate();
-    </script>
 
 </body>
 </html>
